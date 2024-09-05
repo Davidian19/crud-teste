@@ -1,94 +1,151 @@
 <div class="main">
-    <div class="main-width">
-        <div class="card">
-            <section class="section-title">
-                <h3>Cadastrar Profissional</h3>
-            </section>
-            <div class="grid-um">
-                <mat-form-field appearance="outline" class="span8">
-                    <mat-label>Nome<span class="required">*</span></mat-label>
-                    <input matInput>
-                </mat-form-field>
-                
-                <mat-form-field appearance="outline" class="span4">
-                    <mat-label>Especialidade<span class="required">*</span></mat-label>
-                    <mat-select>
-                        @for (specialty of specialties; track specialty.especialidade) {
-                            <mat-option >
-                                {{ specialty.especialidade }} 
-                            </mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
-    
-                <mat-form-field appearance="outline" class="span4">
-                    <mat-label>CRM<span class="required">*</span></mat-label>
-                    <input matInput>
-                </mat-form-field>
-    
-                <mat-form-field appearance="outline" class="span4">
-                    <mat-label>Contato</mat-label>
-                    <span matPrefix>+55 &nbsp;</span>
-                    <input type="tel" matInput placeholder="0 0000-0000">
-                </mat-form-field>
-    
-                <mat-form-field appearance="outline" class="span4">
-                    <mat-label>Email<span class="required">*</span></mat-label>
-                    <input type="email" matInput placeholder="Ex. pat@example.com">
-                </mat-form-field>
-    
-                <mat-form-field appearance="outline" class="span4">
-                    <mat-label>Data da Contratação</mat-label>
-                    <input matInput [matDatepicker]="picker">
-                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                  </mat-form-field>
-                  
-                <mat-form-field appearance="outline" class="span4">
-                    <mat-label>Início do Atendimento</mat-label>
-                    <input matInput placeholder="HH:mm" type="text">
-                </mat-form-field>
-    
-                <mat-form-field appearance="outline" class="span4">
-                    <mat-label>Fim do Atendimento</mat-label>
-                    <input matInput placeholder="HH:mm" type="text">
-                </mat-form-field>
-            </div>
-    
-            <div>
-                <label for="status">Status</label>
-                <div>
-                    <mat-radio-group aria-label="Selecione uma opção">
-                        <mat-radio-button value="true">Ativo(a)</mat-radio-button>
-                        <mat-radio-button value="false">Inativo(a)</mat-radio-button>
-                    </mat-radio-group> 
-                </div>
-            </div>
-    
-            <div class="div-column-gap">
-                <label for="daysOfWeek">Dias de Atendimento</label>
-                <div class="days-checkbox-group">
-                        @for (day of daysOfWeek; track day.name) {
-                            <mat-checkbox>
-                                {{ day.name }}
-                            </mat-checkbox>
-                        } 
-                </div>
-            </div>
+  <div class="main-width">
+    <div class="card">
+      <section class="section-title">
+        <h3>Cadastrar Profissional</h3>
+      </section>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="grid-um">
+          <mat-form-field appearance="outline" class="span8">
+            <mat-label>Nome<span class="required">*</span></mat-label>
+            <input matInput formControlName="name" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="span4">
+            <mat-label>Especialidade<span class="required">*</span></mat-label>
+            <mat-select formControlName="specialty" [disabled]="isReadOnly">
+              <mat-option
+                *ngFor="let specialty of specialties"
+                [value]="specialty.especialidade"
+              >
+                {{ specialty.especialidade }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="span4">
+            <mat-label>CRM<span class="required">*</span></mat-label>
+            <input matInput formControlName="crm" [disabled]="isReadOnly" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="span4">
+            <mat-label>Contato</mat-label>
+            <span matPrefix>+55 &nbsp;</span>
+            <input
+              type="tel"
+              matInput
+              placeholder="0 0000-0000"
+              formControlName="phone"
+              [disabled]="isReadOnly"
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="span4">
+            <mat-label>Email<span class="required">*</span></mat-label>
+            <input
+              type="email"
+              matInput
+              placeholder="Ex. pat@example.com"
+              formControlName="email"
+              [disabled]="isReadOnly"
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="span4">
+            <mat-label>Data da Contratação</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              formControlName="hiringDate"
+              [disabled]="isReadOnly"
+            />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="span4">
+            <mat-label>Início do Atendimento</mat-label>
+            <input
+              matInput
+              placeholder="HH:mm"
+              type="text"
+              formControlName="startAttendance"
+              [disabled]="isReadOnly"
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="span4">
+            <mat-label>Fim do Atendimento</mat-label>
+            <input
+              matInput
+              placeholder="HH:mm"
+              type="text"
+              formControlName="endAttendance"
+              [disabled]="isReadOnly"
+            />
+          </mat-form-field>
         </div>
+
+        <div>
+          <label for="status">Status</label>
+          <div>
+            <mat-radio-group
+              formControlName="status"
+              aria-label="Selecione uma opção"
+              [selected]="form.get('status')?.value"
+              [disabled]="isReadOnly"
+            >
+              <mat-radio-button [checked]="isActiveSelected(true)" value="true"
+                >Ativo(a)</mat-radio-button
+              >
+              <mat-radio-button
+                [checked]="isActiveSelected(false)"
+                value="false"
+                >Inativo(a)</mat-radio-button
+              >
+            </mat-radio-group>
+          </div>
+        </div>
+
+        <div class="div-column-gap">
+          <label for="actions">Dias de Atendimento</label>
+          <div class="days-checkbox-group">
+            <mat-checkbox
+              *ngFor="let day of daysOfWeek"
+              [value]="day.name"
+              [checked]="isDaySelected(day.name)"
+              (change)="onCheckboxChange($event, day.name)"
+              [disabled]="isReadOnly"
+            >
+              {{ day.name }}
+            </mat-checkbox>
+          </div>
+        </div>
+
         <section class="footer-buttons">
-            <div> 
-                <button mat-fab extended color="tertiary" [routerLink]="['/crud-list']">
-                    <mat-icon>keyboard_arrow_left</mat-icon>
-                    Voltar
-                </button>
-            </div>
-            <div> 
-                <button mat-fab extended color="primary">
-                    <mat-icon>check</mat-icon>
-                    Salvar Cadastro
-                </button>
-            </div>
-    </section>
+          <div>
+            <button
+              mat-fab
+              extended
+              color="tertiary"
+              [routerLink]="['/crud-list']"
+            >
+              <mat-icon>keyboard_arrow_left</mat-icon>
+              Voltar
+            </button>
+          </div>
+
+          <div *ngIf="!isReadOnly">
+            <button mat-fab extended color="primary" type="submit">
+              <mat-icon>check</mat-icon>
+              Salvar Cadastro
+            </button>
+          </div>
+        </section>
+      </form>
     </div>
+  </div>
 </div>
